@@ -129,7 +129,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="counterLabel" destination="JIf-Uo-MJt" id="9le-VL-sZH"/>
+                        <outlet property="counterLabel" destination="C2c-09-lGA" id="FZH-n2-OB6"/>
                         <outlet property="imageView" destination="lBd-W5-Edd" id="Us1-y8-YoG"/>
                         <outlet property="textLabel" destination="1Bm-fw-qHh" id="e8J-s1-yQp"/>
                     </connections>
