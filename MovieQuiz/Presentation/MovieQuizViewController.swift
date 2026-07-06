@@ -19,6 +19,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter = AlertPresenter()
+    var statisticService = StatisticService() // инициализация сервиса по статистике
     
     
     // MARK: - Actions
@@ -35,8 +36,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
-        // yesButton.isEnabled = false
-        // noButton.isEnabled = false
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         
         if isCorrect{correctAnswers += 1}
         
@@ -54,17 +55,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
-            // конец квиза
-            
-            // let text = correctAnswers == questionsAmount ?
-            //            "Поздравляем, вы ответили на 10 из 10!" :
-            //            "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
             let result = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
-                text: "Ваш результат: \(correctAnswers) из 10",
+                text: "Ваш результат: \(correctAnswers)/10 \nКоличество сыгранных квизов: \(statisticService.gamesCount) \nРекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%",
                 buttonText: "Сыграть ещё раз"
             )
-            
             show(quiz: result)
         } else {
             currentQuestionIndex += 1
@@ -85,19 +81,27 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - UI
     private func show(quiz step: QuizStepViewModel) {
-        // yesButton.isEnabled = true
-        // noButton.isEnabled = true
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
         
+        imageView.layer.borderWidth = 0
+
         counterLabel.text = step.questionNumber
         imageView.image = step.image
         textLabel.text = step.question
     }
     
     func show(quiz result: QuizResultsViewModel) {
-        let model = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText) { [weak self] in
+        print("алерт")
+        let model = AlertModel(
+            title: result.title,
+            message: result.text,
+            buttonText: result.buttonText)
+        { [weak self] in
             guard let self = self else { return }
 
             restartGame() // self.presenter.restartGame()
+            
         }
         
         alertPresenter.show(in: self, model: model)
@@ -115,6 +119,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
 
         let questionFactory = QuestionFactory()
         questionFactory.delegate = self
