@@ -19,7 +19,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter = AlertPresenter()
-    var statisticService : StatisticServiceProtocol = StatisticService() // инициализация сервиса по статистике
+    private var statisticService : StatisticServiceProtocol = StatisticService() // инициализация сервиса по статистике
     
     
     // MARK: - Actions
