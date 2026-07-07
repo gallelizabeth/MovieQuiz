@@ -56,7 +56,6 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A0691E5C2FC8978A0092B5AF /* Fonts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Fonts; sourceTree = "<group>"; };
-		A081342D2FE0A7A400744F38 /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,7 +147,6 @@
 		ADF0CF75283FDAA10075F54D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				A081342D2FE0A7A400744F38 /* Mocks */,
 				AD5EE5DD284D7887003966EF /* UIColor+Extensions.swift */,
 				AD7AFA542836189F00399704 /* Array+Extensions.swift */,
 				AD77F5732857F8810062FB14 /* Date+Extensions.swift */,
@@ -173,7 +171,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A0691E5C2FC8978A0092B5AF /* Fonts */,
-				A081342D2FE0A7A400744F38 /* Mocks */,
 			);
 			name = MovieQuiz;
 			productName = MovieQuiz;
