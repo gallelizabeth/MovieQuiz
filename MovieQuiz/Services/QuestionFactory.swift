@@ -1,7 +1,7 @@
 import Foundation
 
 
-class QuestionFactory : QuestionFactoryProtocol {
+final class QuestionFactory : QuestionFactoryProtocol {
     weak var delegate: QuestionFactoryDelegate?
     
     func requestNextQuestion() {
@@ -11,58 +11,58 @@ class QuestionFactory : QuestionFactoryProtocol {
         }
         // сделать проверку на повторяющиеся вопросы
         let question = questions[safe: index]
-            delegate?.didReceiveNextQuestion(question: question)
+        delegate?.didReceiveNextQuestion(question: question)
     }
     
     // массив вопросов
     private let questions: [QuizQuestion] = [
         QuizQuestion(
-            image: "The Godfather",
+            imageName: "The Godfather",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "The Dark Knight",
+            imageName: "The Dark Knight",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "Kill Bill",
+            imageName: "Kill Bill",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "The Avengers",
+            imageName: "The Avengers",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "Deadpool",
+            imageName: "Deadpool",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "The Green Knight",
+            imageName: "The Green Knight",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: true),
         
         QuizQuestion(
-            image: "Old",
+            imageName: "Old",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: false),
         
         QuizQuestion(
-            image: "The Ice Age Adventures of Buck Wild",
+            imageName: "The Ice Age Adventures of Buck Wild",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: false),
         
         QuizQuestion(
-            image: "Tesla",
+            imageName: "Tesla",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: false),
         
         QuizQuestion(
-            image: "Vivarium",
+            imageName: "Vivarium",
             text: "Рейтинг этого фильма больше чем 6?",
             correctAnswer: false)
     ]

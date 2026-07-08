@@ -19,14 +19,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter = AlertPresenter()
-    var statisticService = StatisticService() // инициализация сервиса по статистике
+    private var statisticService : StatisticServiceProtocol = StatisticService() // инициализация сервиса по статистике
     
     
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        checkAnswer(true)}
+        showAnswerResult(isCorrect: true)}
     @IBAction private func noButtonClicked(_ sender: Any) {
-        checkAnswer(false)}
+        showAnswerResult(isCorrect: false)}
     
     
     // MARK: - Quiz Logic
@@ -36,6 +36,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showAnswerResult(isCorrect: Bool) {
+        // guard let currentQuestion = currentQuestion else { return }
+        
         yesButton.isEnabled = false
         noButton.isEnabled = false
         
@@ -73,7 +75,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - View Models
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(named: model.imageName) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
@@ -110,8 +112,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func restartGame() {
         imageView.layer.borderWidth = 0
 
-        self.currentQuestionIndex = 0
-        self.correctAnswers = 0
+        currentQuestionIndex = 0
+        correctAnswers = 0
         
         questionFactory?.requestNextQuestion()
     }
@@ -131,8 +133,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return
-}
+        guard let question = question else { return }
         
         currentQuestion = question
         let viewModel = convert(model: question)
