@@ -10,6 +10,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
     
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
+    
     
     // MARK: - Properties
     private var correctAnswers = 0
@@ -74,8 +76,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - View Models
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        QuizStepViewModel(
-            image: UIImage(named: model.imageName) ?? UIImage(),
+        return QuizStepViewModel(
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
     }
@@ -94,7 +96,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func show(quiz result: QuizResultsViewModel) {
-        print("алерт")
         let model = AlertModel(
             title: result.title,
             message: result.text,
@@ -105,7 +106,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             restartGame() // self.presenter.restartGame()
             
         }
-        
         alertPresenter.show(in: self, model: model)
     }
     
@@ -118,16 +118,55 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
     }
     
+    
+    // MARK: - Error Handling
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+    }
+        
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        let model = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self = self else { return }
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+                
+            self.questionFactory?.requestNextQuestion()
+        }
+            
+            alertPresenter.show(in: self, model: model)
+    }
+    
+    func didLoadDataFromServer() {
+        hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-
-        let questionFactory = QuestionFactory()
-        questionFactory.delegate = self
+        imageView.layer.cornerRadius = 20
+        
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         self.questionFactory = questionFactory
-
+        
+        showLoadingIndicator()
         questionFactory.requestNextQuestion()
     }
     
